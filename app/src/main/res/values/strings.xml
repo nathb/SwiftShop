@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Swift Shop</string>
+    <string name="add_item">No items found! Add one via the search bar.</string>
+    <string name="add_shopping_list">Add a shopping list to get started!</string>
+    <string name="add_shopping_list_item">No items found!</string>
+    <string name="created_new_item">Created new item "%1$s"</string>
+    <string name="permanently_remove">Permanently Remove</string>
+    <string name="search_item_not_found">"%1$s" not found - click here to add it</string>
+    <string name="title_all_items">All Items</string>
+    <string name="title_shopping_list">All Shopping Lists</string>
+    <string name="title_shopping_list_detail">Shopping List Items</string>
+    <string name="undo_uppercase">UNDO</string>
+</resources>
