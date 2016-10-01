@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
 import com.nathb.swiftshop.R;
+import com.nathb.swiftshop.model.Category;
 import com.nathb.swiftshop.model.Item;
 import com.nathb.swiftshop.model.ShoppingList;
 import com.nathb.swiftshop.model.ShoppingListItem;
@@ -22,6 +22,7 @@ import com.nathb.swiftshop.task.DeleteItemTask;
 import com.nathb.swiftshop.task.RemoveItemFromShoppingListTask;
 import com.nathb.swiftshop.task.ToggleCheckStatusTask;
 import com.nathb.swiftshop.ui.adapter.ShoppingListDetailAdapter;
+import com.nathb.swiftshop.ui.dialog.SelectCategoryDialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
 
@@ -133,9 +133,17 @@ public class ShoppingListDetailActivity extends BaseActivity {
     private class ItemSearchListener implements ItemSearchView.ItemSearchListener {
 
         @Override
-        public void onAddNewItem(String itemName) {
-            new CreateItemAndAddToShoppingListTask(shoppingList, itemName).execute();
-            showUndoSnackBar(itemName);
+        public void onAddNewItem(final String itemName) {
+            SelectCategoryDialog dialog = new SelectCategoryDialog();
+            dialog.setItemName(itemName);
+            dialog.setCallback(new SelectCategoryDialog.Callback() {
+                @Override
+                public void onCategorySelected(Category category) {
+                    new CreateItemAndAddToShoppingListTask(shoppingList, category, itemName).execute();
+                    showUndoSnackBar(itemName);
+                }
+            });
+            dialog.show(getFragmentManager(), SelectCategoryDialog.TAG);
         }
 
         @Override

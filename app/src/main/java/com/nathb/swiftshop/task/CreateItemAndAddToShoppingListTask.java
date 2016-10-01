@@ -1,5 +1,6 @@
 package com.nathb.swiftshop.task;
 
+import com.nathb.swiftshop.model.Category;
 import com.nathb.swiftshop.model.Item;
 import com.nathb.swiftshop.model.ShoppingList;
 import com.nathb.swiftshop.model.ShoppingListItem;
@@ -10,9 +11,12 @@ public class CreateItemAndAddToShoppingListTask extends RealmTask {
 
     private String shoppingListId;
     private String itemName;
+    private String categoryId;
 
-    public CreateItemAndAddToShoppingListTask(ShoppingList shoppingList, String itemName) {
+    public CreateItemAndAddToShoppingListTask(ShoppingList shoppingList, Category category,
+                                              String itemName) {
         this.shoppingListId = shoppingList.getId();
+        this.categoryId = category.getId();
         this.itemName = itemName;
     }
 
@@ -21,7 +25,10 @@ public class CreateItemAndAddToShoppingListTask extends RealmTask {
         return new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Item item = new Item(itemName);
+                Category category = realm.where(Category.class)
+                                            .equalTo("id", categoryId)
+                                            .findFirst();
+                Item item = new Item(itemName, category);
                 item = realm.copyToRealm(item);
                 ShoppingList shoppingList = realm.where(ShoppingList.class)
                         .equalTo("id", shoppingListId)

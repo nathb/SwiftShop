@@ -5,10 +5,11 @@ import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class ShoppingList extends RealmObject {
 
-    private String id;
+    @PrimaryKey private String id;
     private RealmList<ShoppingListItem> slis;
     private Date timestamp;
 

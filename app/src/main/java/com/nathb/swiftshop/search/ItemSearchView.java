@@ -50,7 +50,10 @@ public class ItemSearchView extends SearchView {
         if (text.length() < 2) {
             items = new ArrayList<>();
         } else {
-            items = realm.where(Item.class).beginsWith("name", text, Case.INSENSITIVE).findAll();
+            items = realm.where(Item.class)
+                            .contains("name", text, Case.INSENSITIVE)
+                            .findAll()
+                            .sort("name");
         }
         adapter.swapCursor(new ItemCursor(getContext(), items, text));
     }
@@ -60,6 +63,7 @@ public class ItemSearchView extends SearchView {
     }
 
     private class QueryListener implements OnQueryTextListener {
+
         @Override
         public boolean onQueryTextSubmit(String query) {
             // Do nothing

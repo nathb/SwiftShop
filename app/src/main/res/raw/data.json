@@ -1,0 +1,62 @@
+[
+  {
+    "name" : "Fruit and Vegetables",
+    "items" : [ "Apples", "Avocado", "Bananas", "Broccoli", "Cabbage", "Carrots", "Cauliflower", "Celery", "Chilli", "Coriander", "Corn", "Cucumbers", "Garlic", "Ginger", "Grapes", "Green Onions", "Lettuce", "Mandarins", "Mushrooms", "Onions", "Oranges", "Parsely", "Pears", "Potatoes", "Pumpkin", "Red Onions", "Rocket", "Spinach", "Sweet Potatoes", "Tomatoes", "Tomatoes - Canned", "Zucchinis" ]
+  },
+  {
+    "name" : "Meat",
+    "items" : [ "Bacon", "Bbq Chicken", "Beef", "Chicken", "Ham", "Lamb", "Mince", "Pork", "Salami", "Sausages" ]
+  },
+  {
+    "name" : "Fish",
+    "items" : [ "Barramundi", "Other Fish", "Salmon", "Salmon - Canned", "Sardines", "Tuna", "Tuna - Canned" ]
+  },
+  {
+    "name" : "Dairy",
+    "items" : [ "Butter", "Cheese - Block", "Cheese - Grated", "Cheese - Sliced", "Cream", "Eggs", "Margarine", "Milk", "Sour Cream", "Yoghurt" ]
+  },
+  {
+    "name" : "Breads and Grains",
+    "items" : [ "Bread - White", "Bread - Wholegrain", "Cake Mix", "Cereal", "Crumpets", "Flour - Bread", "Flour - White", "Garlic Bread", "Oats", "Rice - Brown", "Rice - White", "Soups", "Spaghetti" ]
+  },
+  {
+    "name" : "Condiments",
+    "items" : [ "Bbq Sauce", "Chilli Sauce", "Fish Sauce", "Grapeseed Oil", "Gravox", "Honey", "Jam", "Mayonnaise", "Mustard", "Olive Oil", "Olive Oil - Spray", "Oyster Sauce", "Peanut Butter - Crunchy", "Peanut Butter - Smooth", "Pepper", "Salad Dressing", "Salt", "Soy Sauce", "Spices", "Stock - Cubes", "Stock - Jelly", "Sugar", "Tomato Paste", "Tomato Sauce", "Vegemite", "Vinegar", "Worcestershire Sauce" ]
+  },
+  {
+    "name" : "Snacks",
+    "items" : [ "Biscuits", "Biscuits - Savoury", "Chips", "Chocolate", "Confectionery" ]
+  },
+  {
+    "name" : "Frozen",
+    "items" : [ "Ice Cream", "Ice Cream - Dads", "Pies - Beef - Frozen", "Pies - Chicken - Frozen", "Sausage Rolls - Frozen", "Veggies - Frozen" ]
+  },
+  {
+    "name" : "Drinks",
+    "items" : [ "Coffee", "Coffee - Decaf", "Hot Chocolate", "Mineral Water", "Soft Drinks", "Tea - Black", "Tea - Green" ]
+  },
+  {
+    "name" : "Kitchen Equipment",
+    "items" : [ "Aluminium Foil", "Baking Bags", "Baking Paper", "Clingwrap", "Plastic Bags" ]
+  },
+  {
+    "name" : "Cleaning",
+    "items" : [ "Air Freshener", "Detergent", "Disinfectant", "Fabric Softener", "Finish", "Harpic", "Laundry Powder", "Paper Towels", "Rinse Aid", "Scourers", "Shower Power", "Spray N Wipe", "Toilet Cleaner", "Windex" ]
+  },
+  {
+    "name" : "Toiletries",
+    "items" : [ "Conditioner", "Deodorant", "Dove", "Hair Dye", "Shampoo", "Skin Care", "Sorbolene", "Sunscreen", "Tissues", "Toilet Paper", "Tooth Brushes", "Tooth Paste" ]
+  },
+  {
+    "name" : "Pet",
+    "items" : [ "Cat Food", "Cat Food - Dry", "Kitty Litter" ]
+  },
+  {
+    "name" : "Medical",
+    "items" : [ "Bandaids", "Panadol", "Vitamins" ]
+  },
+  {
+    "name" : "Misc",
+    "items" : [ "Batteries", "Gardening", "Hardware", "Light Globes" ]
+  }
+]

@@ -3,10 +3,11 @@ package com.nathb.swiftshop.model;
 import java.util.UUID;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class ShoppingListItem extends RealmObject implements Comparable<ShoppingListItem> {
 
-    private String id;
+    @PrimaryKey private String id;
     private Item item;
     private boolean isChecked = false;
 

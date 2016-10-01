@@ -3,10 +3,12 @@ package com.nathb.swiftshop.data;
 import android.content.res.Resources;
 
 import com.nathb.swiftshop.R;
+import com.nathb.swiftshop.model.Category;
 import com.nathb.swiftshop.model.Item;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,9 +28,26 @@ public class PopulateRealm implements Realm.Transaction {
     @Override
     public void execute(Realm realm) {
         try {
-            realm.createAllFromJson(Item.class, readResource(R.raw.items));
+
+            JSONArray categories = readResource(R.raw.data);
+            for (int i = 0; i < categories.length(); i++) {
+
+                // Create category
+                JSONObject jsonCategory = categories.getJSONObject(i);
+                Category category = new Category(jsonCategory.getString("name"), i+1);
+                category = realm.copyToRealm(category);
+
+                // Add items to category
+                JSONArray jsonItemNames = jsonCategory.getJSONArray("items");
+                for (int j = 0; j < jsonItemNames.length(); j++) {
+                    Item item = new Item(jsonItemNames.getString(j), category);
+                    realm.copyToRealm(item);
+                }
+
+            }
+
         } catch (Exception e) {
-            Timber.e("Error creating from json file");
+            Timber.e(e, "Error creating from json file");
             // Realm handles exception and cancels transaction
             throw new RuntimeException();
         }
