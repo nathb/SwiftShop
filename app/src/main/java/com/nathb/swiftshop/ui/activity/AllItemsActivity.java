@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,9 +17,12 @@ import com.nathb.swiftshop.task.DeleteItemTask;
 import com.nathb.swiftshop.task.RemoveItemFromShoppingListTask;
 import com.nathb.swiftshop.ui.adapter.AllItemsAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
@@ -98,12 +100,20 @@ public class AllItemsActivity extends BaseActivity {
         items.addChangeListener(new RealmChangeListener<RealmResults<Item>>() {
             @Override
             public void onChange(RealmResults<Item> element) {
-                emptyView.setVisibility(items.isEmpty()
-                        ? View.VISIBLE : View.GONE);
-                adapter.notifyDataSetChanged();
+                setItems(element);
             }
         });
-        adapter.setItems(items);
+        setItems(items);
+    }
+
+    private void setItems(RealmResults<Item> items) {
+        // Realm does not support sorting on child fields, therefore using a custom comparator.
+        // Realm also does not allow a Collections.sort() outside of a transaction so create new list.
+        List<Item> sortedItems = new ArrayList<>(items);
+        Collections.sort(sortedItems);
+        emptyView.setVisibility(sortedItems.isEmpty()
+                ? View.VISIBLE : View.GONE);
+        adapter.setItems(sortedItems);
     }
 
     @Override

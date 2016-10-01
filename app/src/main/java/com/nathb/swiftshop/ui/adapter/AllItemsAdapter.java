@@ -1,5 +1,7 @@
 package com.nathb.swiftshop.ui.adapter;
 
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -28,7 +30,13 @@ public class AllItemsAdapter extends ArrayAdapter<Item, AllItemsAdapter.ViewHold
         void onItemDeleted(Item item);
     }
 
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_ROW = 1;
+
     private OnClickListener listener;
+
+    // A map of itemName to ShoppingListItem use to quickly
+    // determine if the item is in the current shopping list
     private Map<String, ShoppingListItem> itemMap = new HashMap<>();
 
     public AllItemsAdapter(OnClickListener listener) {
@@ -44,16 +52,40 @@ public class AllItemsAdapter extends ArrayAdapter<Item, AllItemsAdapter.ViewHold
 
     @Override
     public AllItemsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layoutId = viewType == VIEW_TYPE_HEADER
+                ? R.layout.row_all_items_header
+                : R.layout.row_all_items;
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_all_items, parent, false);
+                .inflate(layoutId, parent, false);
+
         return new AllItemsAdapter.ViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(AllItemsAdapter.ViewHolder holder, int position) {
-        Item item = items.get(position);
+        Item item = getItem(position);
         ShoppingListItem sli = itemMap.get(item.getName());
-        holder.bind(item, sli);
+        if (getItemViewType(position) == VIEW_TYPE_HEADER) {
+            holder.bindHeader(item, sli);
+        } else {
+            holder.bindRow(item, sli);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return VIEW_TYPE_HEADER;
+        }
+
+        String prevName = getItem(position - 1).getCategory().getName();
+        String currentName = getItem(position).getCategory().getName();
+
+        if (!currentName.equals(prevName)) {
+            return VIEW_TYPE_HEADER;
+        } else {
+            return VIEW_TYPE_ROW;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
@@ -65,6 +97,9 @@ public class AllItemsAdapter extends ArrayAdapter<Item, AllItemsAdapter.ViewHold
         private Item item;
         private ShoppingListItem sli;
         private OnClickListener listener;
+        private Drawable checkBoxChecked;
+        private Drawable checkBoxUnchecked;
+        private TextView categoryName;
 
         public ViewHolder(View v, OnClickListener listener) {
             super(v);
@@ -72,17 +107,24 @@ public class AllItemsAdapter extends ArrayAdapter<Item, AllItemsAdapter.ViewHold
             ButterKnife.bind(this, v);
             v.setOnCreateContextMenuListener(this);
             itemToggle.setOnClickListener(this);
+            checkBoxChecked = ContextCompat.getDrawable(v.getContext(), R.drawable.check_box_checked);
+            checkBoxUnchecked = ContextCompat.getDrawable(v.getContext(), R.drawable.check_box_unchecked);
+
+            // Category only on header so will be null on regular row
+            // Use findViewById in this case to avoid Butterknife exception
+            categoryName = (TextView) v.findViewById(R.id.category_name);
         }
 
-        public void bind(Item item, ShoppingListItem sli) {
+        public void bindHeader(Item item, ShoppingListItem sli) {
+            categoryName.setText(item.getCategory().getName());
+            bindRow(item, sli);
+        }
+
+        public void bindRow(Item item, ShoppingListItem sli) {
             this.item = item;
             this.sli = sli;
             textView.setText(item.getName());
-
-            int drawable = sli != null
-                    ? R.drawable.check_box_checked
-                    : R.drawable.check_box_unchecked;
-            itemToggle.setImageResource(drawable);
+            itemToggle.setImageDrawable(sli != null ? checkBoxChecked : checkBoxUnchecked);
         }
 
         @Override

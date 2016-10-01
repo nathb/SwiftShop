@@ -14,6 +14,10 @@ public abstract class ArrayAdapter<T, VH extends RecyclerView.ViewHolder>
         this.items = items;
     }
 
+    public T getItem(int position) {
+        return items.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return items == null ? 0 : items.size();

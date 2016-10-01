@@ -37,7 +37,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList, ShoppingList
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(items.get(position));
+        holder.bind(getItem(position));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
