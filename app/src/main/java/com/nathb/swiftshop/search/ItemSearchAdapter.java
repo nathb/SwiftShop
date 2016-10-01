@@ -2,6 +2,9 @@ package com.nathb.swiftshop.search;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import butterknife.ButterKnife;
 
 import static com.nathb.swiftshop.search.ItemCursor.IS_ADD_ITEM_ROW;
 import static com.nathb.swiftshop.search.ItemCursor.ITEM_NAME;
+import static com.nathb.swiftshop.search.ItemCursor.SEARCH_TERM;
 
 public class ItemSearchAdapter extends CursorAdapter {
 
@@ -35,7 +39,15 @@ public class ItemSearchAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        viewHolder.setText(cursor.getString(cursor.getColumnIndex(ITEM_NAME)));
+        String searchTerm = cursor.getString(cursor.getColumnIndex(SEARCH_TERM));
+        String itemName = cursor.getString(cursor.getColumnIndex(ITEM_NAME));
+        boolean isAddItemRow = cursor.getInt(cursor.getColumnIndex(IS_ADD_ITEM_ROW)) == 1;
+
+        if (!isAddItemRow) {
+            itemName = itemName.replace(searchTerm, "<b>" + searchTerm + "</b>");
+            itemName = itemName.replace(searchTerm.toLowerCase(), "<b>" + searchTerm.toLowerCase() + "</b>");
+        }
+        viewHolder.setHtmlText(itemName);
         viewHolder.toggleAddButton(cursor.getInt(cursor.getColumnIndex(IS_ADD_ITEM_ROW)) == 1);
     }
 
@@ -48,8 +60,14 @@ public class ItemSearchAdapter extends CursorAdapter {
             ButterKnife.bind(this, v);
         }
 
-        public void setText(String text) {
-            itemName.setText(text);
+        public void setHtmlText(String text) {
+            Spanned result;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                result = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                result = Html.fromHtml(text);
+            }
+            itemName.setText(result);
         }
 
         public void toggleAddButton(boolean show) {
