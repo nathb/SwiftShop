@@ -25,6 +25,10 @@ public class ShoppingListDetailAdapter extends ArrayAdapter<ShoppingListItem, Sh
         void onItemDeleted(Item item);
     }
 
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_ROW = 1;
+    private static final int VIEW_TYPE_FIRST_CHECKED_ROW = 2;
+
     private OnClickListener listener;
 
     public ShoppingListDetailAdapter(OnClickListener listener) {
@@ -33,14 +37,44 @@ public class ShoppingListDetailAdapter extends ArrayAdapter<ShoppingListItem, Sh
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                                    .inflate(R.layout.row_shopping_list_detail_item, parent, false);
+        int layoutId = viewType == VIEW_TYPE_ROW
+                ? R.layout.row_shopping_list_detail_item
+                : R.layout.row_shopping_list_detail_header;
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new ViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        int viewType = getItemViewType(position);
+        ShoppingListItem sli = getItem(position);
+        switch (viewType) {
+            case VIEW_TYPE_HEADER: holder.bindHeader(sli); break;
+            case VIEW_TYPE_ROW: holder.bindRow(sli); break;
+            case VIEW_TYPE_FIRST_CHECKED_ROW: holder.bindFirstCheckRow(sli); break;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        ShoppingListItem currentItem = getItem(position);
+        if (position == 0) {
+            return currentItem.isChecked()
+                ? VIEW_TYPE_FIRST_CHECKED_ROW
+                : VIEW_TYPE_HEADER;
+        }
+
+        ShoppingListItem prevItem = getItem(position - 1);
+
+        if (!currentItem.isChecked()
+                && !currentItem.getItem().getCategory().getName().equals(
+                        prevItem.getItem().getCategory().getName())) {
+            return VIEW_TYPE_HEADER;
+        } else if (currentItem.isChecked() && !prevItem.isChecked()) {
+            return VIEW_TYPE_FIRST_CHECKED_ROW;
+        } else {
+            return VIEW_TYPE_ROW;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
@@ -51,6 +85,7 @@ public class ShoppingListDetailAdapter extends ArrayAdapter<ShoppingListItem, Sh
 
         private ShoppingListItem sli;
         private OnClickListener listener;
+        private TextView categoryName;
 
         public ViewHolder(View v, OnClickListener listener) {
             super(v);
@@ -59,9 +94,23 @@ public class ShoppingListDetailAdapter extends ArrayAdapter<ShoppingListItem, Sh
             v.setOnClickListener(this);
             v.setOnCreateContextMenuListener(this);
             removeItemButton.setOnClickListener(this);
+
+            // Category only on header so will be null on regular row
+            // Use findViewById in this case to avoid Butterknife exception
+            categoryName = (TextView) v.findViewById(R.id.category_name);
         }
 
-        public void bind(ShoppingListItem sli) {
+        public void bindFirstCheckRow(ShoppingListItem sli) {
+            categoryName.setText(categoryName.getContext().getString(R.string.collected_items));
+            bindRow(sli);
+        }
+
+        public void bindHeader(ShoppingListItem sli) {
+            categoryName.setText(sli.getItem().getCategory().getName());
+            bindRow(sli);
+        }
+
+        public void bindRow(ShoppingListItem sli) {
             this.sli = sli;
             itemName.setText(sli.getName());
             int paintFlags = itemName.getPaintFlags();
