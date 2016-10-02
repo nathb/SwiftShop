@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import com.nathb.swiftshop.R;
 import com.nathb.swiftshop.model.ShoppingList;
 import com.nathb.swiftshop.task.CreateShoppingListTask;
+import com.nathb.swiftshop.task.DeleteShoppingListTask;
 import com.nathb.swiftshop.ui.adapter.ShoppingListAdapter;
 
 import butterknife.BindView;
@@ -55,9 +56,15 @@ public class ShoppingListActivity extends BaseActivity {
         scaleInAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_scale_in);
 
         adapter = new ShoppingListAdapter(new ShoppingListAdapter.OnClickListener() {
+
             @Override
             public void onShoppingListClicked(ShoppingList shoppingList) {
                 navigateToShoppingListDetail(shoppingList.getId());
+            }
+
+            @Override
+            public void onShoppingListDeleted(ShoppingList shoppingList) {
+                new DeleteShoppingListTask(shoppingList).execute();
             }
         });
 

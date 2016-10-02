@@ -1,9 +1,10 @@
 package com.nathb.swiftshop.ui.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList, ShoppingList
 
     public interface OnClickListener {
         void onShoppingListClicked(ShoppingList shoppingList);
+        void onShoppingListDeleted(ShoppingList shoppingList);
     }
 
     private OnClickListener listener;
@@ -40,7 +42,8 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList, ShoppingList
         holder.bind(getItem(position));
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnCreateContextMenuListener {
 
         @BindView(R.id.shopping_list_title) TextView shoppingListTitle;
 
@@ -52,6 +55,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList, ShoppingList
             this.listener = listener;
             ButterKnife.bind(this, v);
             v.setOnClickListener(this);
+            v.setOnCreateContextMenuListener(this);
         }
 
         public void bind(ShoppingList shoppingList) {
@@ -67,6 +71,18 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList, ShoppingList
         @Override
         public void onClick(View v) {
             listener.onShoppingListClicked(shoppingList);
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(R.string.permanently_remove)
+                    .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            listener.onShoppingListDeleted(ViewHolder.this.shoppingList);
+                            return true;
+                        }
+                    });
         }
     }
 
